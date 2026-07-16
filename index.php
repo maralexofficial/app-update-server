@@ -14,26 +14,21 @@ if (DEBUG) {
     error_reporting(0);
 }
 
-
+require HTTPDOCS_PATH . '/functions/mongodb.php';
+require HTTPDOCS_PATH . '/functions/statistics.php';
 require HTTPDOCS_PATH . '/functions/response.php';
 require HTTPDOCS_PATH . '/functions/logger.php';
 require HTTPDOCS_PATH . '/functions/debug.php';
 require HTTPDOCS_PATH . '/functions/app.php';
-
 
 debugLog('Request started', [
     'uri'   => $_SERVER['REQUEST_URI'] ?? null,
     'query' => $_GET
 ]);
 
-
 $app = $_GET['app'] ?? null;
 
-
 if ($app === null || $app === '') {
-
-    // Nur echte API-Requests loggen
-    // Keine Einträge für favicon.ico, robots.txt usw.
     if (
         isset($_SERVER['QUERY_STRING']) &&
         $_SERVER['QUERY_STRING'] !== ''
@@ -54,15 +49,11 @@ if ($app === null || $app === '') {
     ], 400);
 }
 
-
-// App Name bereinigen
 $app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
-
 
 debugLog('App resolved', [
     'app' => $app
 ]);
-
 
 if (!appExists($app)) {
 
@@ -81,14 +72,11 @@ if (!appExists($app)) {
     ], 404);
 }
 
-
 $action = $_GET['action'] ?? 'info';
-
 
 debugLog('Action selected', [
     'action' => $action
 ]);
-
 
 $actions = [
     'info',
@@ -96,15 +84,12 @@ $actions = [
     'changelog'
 ];
 
-
 if (!in_array($action, $actions, true)) {
-
     logRequest(
         $app,
         'unknown_action',
         "Action '$action' not supported"
     );
-
     respond([
         'success' => false,
         'error' => [
@@ -114,13 +99,11 @@ if (!in_array($action, $actions, true)) {
     ], 400);
 }
 
-
 logRequest(
     $app,
     'request',
     "Action: $action"
 );
-
 
 switch ($action) {
 
