@@ -10,11 +10,12 @@ function logRequest(
 {
     $log = [
         'time'    => date('c'),
-        'app'     => $app,
+        'app'     => $app !== '' ? $app : null,
         'status'  => $status,
-        'ip'      => $_SERVER['REMOTE_ADDR'] ?? '',
-        'agent'   => $_SERVER['HTTP_USER_AGENT'] ?? '',
-        'current' => $_GET['current'] ?? '',
+        'ip'      => $_SERVER['REMOTE_ADDR'] ?? null,
+        'agent'   => $_SERVER['HTTP_USER_AGENT'] ?? null,
+        'current' => $_GET['current'] ?? null,
+        'query'   => $_SERVER['QUERY_STRING'] ?? null,
     ];
 
     if ($message !== null) {
@@ -23,7 +24,10 @@ function logRequest(
 
     file_put_contents(
         LOGS_PATH . '/requests.log',
-        json_encode($log, JSON_UNESCAPED_SLASHES) . PHP_EOL,
+        json_encode(
+            $log,
+            JSON_UNESCAPED_SLASHES
+        ) . PHP_EOL,
         FILE_APPEND | LOCK_EX
     );
 }
