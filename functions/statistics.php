@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 function saveStatistic(array $data): void
 {
-    if (!MONGO_ENABLED) {
+    $collection = mongoCollection();
+
+    if ($collection === null) {
         return;
     }
-    
+
     try {
         $data['createdAt'] =
             new MongoDB\BSON\UTCDateTime();
-        mongoCollection()
-            ->insertOne($data);
+        $collection->insertOne($data);
     } catch (Throwable $e) {
-        debugLog(
-            'MongoDB error',
-            [
-                'error' => $e->getMessage()
-            ]
-        );
+        debugLog('MongoDB insert failed', [
+            'error' => $e->getMessage()
+        ]);
     }
 }
