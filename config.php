@@ -15,7 +15,7 @@ require HTTPDOCS_PATH . '/vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(ROOT_PATH);
+$dotenv = Dotenv::createImmutable(HTTPDOCS_PATH);
 $dotenv->load();
 
 define(
