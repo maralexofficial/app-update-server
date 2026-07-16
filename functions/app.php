@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+function appExists(string $app): bool
+{
+    return file_exists(APPS_PATH . '/' . $app . '/latest.json');
+}
+
 function loadApp(string $app): array
 {
     $app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
