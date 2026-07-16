@@ -8,6 +8,19 @@ function logRequest(
     ?string $message = null
 ): void
 {
+
+    if (!is_dir(LOGS_PATH)) {
+        if (!mkdir(LOGS_PATH, 0755, true) && !is_dir(LOGS_PATH)) {
+            error_log('Unable to create log directory: ' . LOGS_PATH);
+            return;
+        }
+    }
+
+    if (!is_writable(LOGS_PATH)) {
+        error_log('Log directory is not writable: ' . LOGS_PATH);
+        return;
+    }
+
     $log = [
         'time'    => date('c'),
         'app'     => $app !== '' ? $app : null,
@@ -22,12 +35,11 @@ function logRequest(
         $log['message'] = $message;
     }
 
-    file_put_contents(
+    if (file_put_contents(
         LOGS_PATH . '/requests.log',
-        json_encode(
-            $log,
-            JSON_UNESCAPED_SLASHES
-        ) . PHP_EOL,
+        json_encode($log, JSON_UNESCAPED_SLASHES) . PHP_EOL,
         FILE_APPEND | LOCK_EX
-    );
+    ) === false) {
+        error_log('Unable to write to log file: ' . LOGS_PATH . '/requests.log');
+    }
 }
