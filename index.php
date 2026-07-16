@@ -12,6 +12,7 @@ require BASE_PATH . '/functions/response.php';
 require BASE_PATH . '/functions/logger.php';
 require BASE_PATH . '/functions/app.php';
 
+
 $app = $_GET['app'] ?? '';
 
 if ($app === '') {
@@ -31,10 +32,18 @@ if ($app === '') {
     ], 400);
 }
 
+
 $app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
 
+
 if (!appExists($app)) {
-    logRequest($app, 'not_found', 'App does not exist');
+
+    logRequest(
+        $app,
+        'not_found',
+        'App does not exist'
+    );
+
     respond([
         'success' => false,
         'error' => [
@@ -44,11 +53,41 @@ if (!appExists($app)) {
     ], 404);
 }
 
-logRequest($app, 'success');
 
-$data = loadApp($app);
+$action = $_GET['action'] ?? 'info';
 
-respond([
-    'success' => true,
-    'data' => $data
-]);
+
+logRequest(
+    $app,
+    'request',
+    "Action: $action"
+);
+
+
+switch ($action) {
+
+    case 'info':
+        require BASE_PATH . '/actions/info.php';
+        break;
+
+
+    case 'download':
+        require BASE_PATH . '/actions/download.php';
+        break;
+
+
+    case 'changelog':
+        require BASE_PATH . '/actions/changelog.php';
+        break;
+
+
+    default:
+
+        respond([
+            'success' => false,
+            'error' => [
+                'code' => 'unknown_action',
+                'message' => "Action '$action' not supported."
+            ]
+        ], 400);
+}
