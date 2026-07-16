@@ -8,9 +8,9 @@ error_reporting(E_ALL);
 
 require __DIR__ . '/config.php';
 
-require BASE_PATH . '/functions/response.php';
-require BASE_PATH . '/functions/logger.php';
-require BASE_PATH . '/functions/app.php';
+require HTTPDOCS_PATH . '/functions/response.php';
+require HTTPDOCS_PATH . '/functions/logger.php';
+require HTTPDOCS_PATH . '/functions/app.php';
 
 
 $app = $_GET['app'] ?? '';
@@ -67,17 +67,17 @@ logRequest(
 switch ($action) {
 
     case 'info':
-        require BASE_PATH . '/actions/info.php';
+        require ACTIONS_PATH . '/info.php';
         break;
 
 
     case 'download':
-        require BASE_PATH . '/actions/download.php';
+        require ACTIONS_PATH . '/download.php';
         break;
 
 
     case 'changelog':
-        require BASE_PATH . '/actions/changelog.php';
+        require ACTIONS_PATH . '/changelog.php';
         break;
 
 
