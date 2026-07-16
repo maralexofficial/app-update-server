@@ -15,7 +15,13 @@ require BASE_PATH . '/functions/app.php';
 $app = $_GET['app'] ?? '';
 
 if ($app === '') {
-    logRequest('', 'error', 'Missing app parameter');
+
+    logRequest(
+        '',
+        'missing_parameter',
+        'Missing app parameter'
+    );
+
     respond([
         'success' => false,
         'error' => [
