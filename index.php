@@ -1,35 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
+require __DIR__ . '/config.php';
+
+require BASE_PATH . '/functions/response.php';
+require BASE_PATH . '/functions/logger.php';
+require BASE_PATH . '/functions/app.php';
+
 $app = $_GET['app'] ?? '';
 
-if (!$app) {
-    http_response_code(400);
-    exit('Missing app parameter');
+if ($app === '') {
+    respond([
+        'success' => false,
+        'error' => [
+            'code' => 'missing_app',
+            'message' => 'Missing parameter: app'
+        ]
+    ], 400);
 }
 
-$app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
+logRequest($app);
 
-$file = __DIR__ . "/apps/$app/latest.json";
+$data = loadApp($app);
 
-if (!file_exists($file)) {
-    http_response_code(404);
-    exit('Unknown app');
-}
-
-header('Content-Type: application/json');
-
-$log = [
-    'time' => date('c'),
-    'app' => $app,
-    'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
-    'agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-    'current' => $_GET['current'] ?? '',
-];
-
-file_put_contents(
-    __DIR__ . '/logs/requests.log',
-    json_encode($log) . PHP_EOL,
-    FILE_APPEND | LOCK_EX
-);
-
-readfile($file);
+respond([
+    'success' => true,
+    'data' => $data
+]);
