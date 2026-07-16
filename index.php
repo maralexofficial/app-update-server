@@ -32,11 +32,18 @@ $app = $_GET['app'] ?? null;
 
 if ($app === null || $app === '') {
 
-    logRequest(
-        '',
-        'missing_parameter',
-        'Missing app parameter'
-    );
+    // Nur echte API-Requests loggen
+    // Keine Einträge für favicon.ico, robots.txt usw.
+    if (
+        isset($_SERVER['QUERY_STRING']) &&
+        $_SERVER['QUERY_STRING'] !== ''
+    ) {
+        logRequest(
+            '',
+            'missing_parameter',
+            'Missing app parameter'
+        );
+    }
 
     respond([
         'success' => false,
