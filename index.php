@@ -15,6 +15,7 @@ require BASE_PATH . '/functions/app.php';
 $app = $_GET['app'] ?? '';
 
 if ($app === '') {
+    logRequest('', 'error', 'Missing app parameter');
     respond([
         'success' => false,
         'error' => [
@@ -24,7 +25,20 @@ if ($app === '') {
     ], 400);
 }
 
-logRequest($app);
+$app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
+
+if (!appExists($app)) {
+    logRequest($app, 'not_found', 'App does not exist');
+    respond([
+        'success' => false,
+        'error' => [
+            'code' => 'unknown_app',
+            'message' => "App '$app' not found."
+        ]
+    ], 404);
+}
+
+logRequest($app, 'success');
 
 $data = loadApp($app);
 
