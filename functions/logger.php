@@ -13,7 +13,7 @@ function logRequest(string $app): void
     ];
 
     file_put_contents(
-        LOG_PATH . '/requests.log',
+        LOGS_PATH . '/requests.log',
         json_encode($log, JSON_UNESCAPED_SLASHES) . PHP_EOL,
         FILE_APPEND | LOCK_EX
     );
