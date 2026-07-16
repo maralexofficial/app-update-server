@@ -6,7 +6,7 @@ function loadApp(string $app): array
 {
     $app = preg_replace('/[^a-zA-Z0-9_-]/', '', $app);
 
-    $file = APP_PATH . '/' . $app . '/latest.json';
+    $file = APPS_PATH . '/' . $app . '/latest.json';
 
     if (!file_exists($file)) {
         respond([
