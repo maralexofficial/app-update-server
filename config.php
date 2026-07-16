@@ -11,7 +11,7 @@ define('ACTIONS_PATH', HTTPDOCS_PATH . '/actions');
 
 define('LOGS_PATH', ROOT_PATH . '/logs');
 
-require ROOT_PATH . '/vendor/autoload.php';
+require HTTPDOCS_PATH . '/vendor/autoload.php';
 
 $dotenv = Dotenv::createImmutable(ROOT_PATH);
 $dotenv->load();
