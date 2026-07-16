@@ -6,7 +6,7 @@ $data = loadApp($app);
 
 $version = $_GET['version'] ?? $data['version'];
 
-$file = APPS_PATH . '/' . $app . '/apk/' . basename($data['apk']);
+$file = APPS_PATH . '/' . $app . '/apks/' . basename($data['apk']);
 
 
 if (!file_exists($file)) {
